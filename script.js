@@ -4,33 +4,31 @@ const Script = require('smooch-bot').Script;
 
 module.exports = new Script({
     processing: {
-        prompt: (bot) => bot.say('Beep boop...'),
+        prompt: (bot) => bot.say('Just a second...'),
         receive: () => 'processing'
     },
 
     start: {
         receive: (bot) => {
-            return bot.say('Hi! I\'m Smooch Bot!')
-                .then(() => 'askName');
+            return bot.say('Hi! Ich helfe dir, das Spiel nicht zu verpassen!')
+                .then(() => 'askIntention');
         }
     },
 
-    askName: {
-        prompt: (bot) => bot.say('What\'s your name?'),
+    askIntention: {
+        prompt: (bot) => bot.say('Was möchtest Du schauen?'),
         receive: (bot, message) => {
-            const name = message.text;
-            return bot.setProp('name', name)
-                .then(() => bot.say(`Great! I'll call you ${name}
-Is that OK? %[Yes](postback:yes) %[No](postback:no)`))
+            const answer = message.text;
+            return bot.setProp('match', answer)
+                .then(() => bot.say(`Cool! Du kannst ${match} hier sehen: %[Intertank](postback:intertank) %[Milchbar](postback:milchbar)`))
                 .then(() => 'finish');
         }
     },
 
     finish: {
         receive: (bot, message) => {
-            return bot.getProp('name')
-                .then((name) => bot.say(`Sorry ${name}, my creator didn't ` +
-                        'teach me how to do anything else!'))
+            return bot.getProp('match')
+                .then((name) => bot.say('Sorry habe keine Locations gefunden'))
                 .then(() => 'finish');
         }
     }
